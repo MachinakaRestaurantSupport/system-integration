@@ -1,0 +1,2 @@
+# md2usdm で生成される Excel は成果物としてコミットしない
+usdm/**/*.xlsx
