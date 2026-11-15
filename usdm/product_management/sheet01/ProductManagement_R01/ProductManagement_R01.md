@@ -1,19 +1,19 @@
 ↑ [1.要件](../index.md)
 
-# 【ProductManagement_R01】サンプル要件
+# 【ProductManagement_R01】商品マスタ管理
 
 ## 要求
 
-（要求内容を記述してください）
+飲食店スタッフが商品の分類・写真・価格・アレルギー・カロリー・提供時間・オプション・持ち帰り可否を登録・管理できること。
 
 ### 理由
 
-（理由を記述してください）
+メニュー作成および注文ツールが参照する正確な商品情報の正本を一元管理するため。
 
 ### 説明
 
-記載無し
+商品IDをキーとして全CRUD操作を提供する。
 
 ## 下位要求
 
-- [01 サンプル下位要件](./ProductManagement_R01.DM01.md "【ProductManagement_R01.DM01】")
+- [01 商品情報登録・更新・参照仕様](./ProductManagement_R01.DM01.md "【ProductManagement_R01.DM01】")

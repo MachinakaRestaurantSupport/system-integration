@@ -4,7 +4,7 @@
 
 - [x] 1.1 [S01-01-01] `openspec/schemas/usdm/` と `openspec/changes/init/` の OpenSpec 計画アーティファクトを登録し、`openspec validate init --strict` の通過を確認する
 - [x] 1.2 [S01-01-01] `docs/system-design.md` を更新し、技術スタック（Python / FastAPI）、アーキテクチャ構成、連携ポイント I-1〜I-6、テスト戦略を確定する
-- [ ] 1.3 [S02-01-01, S02-01-02, S02-01-03] `usdm/machinaka_restaurant_support_tools/` およびマスタ・顧客系3サブシステム（`product_management`, `menu_management`, `guest_management`）の USDM Markdown を更新し、`../.venv/bin/python -m md2usdm` で Excel を再生成する
+- [x] 1.3 [S02-01-01, S02-01-02, S02-01-03] `usdm/machinaka_restaurant_support_tools/` およびマスタ・顧客系3サブシステム（`product_management`, `menu_management`, `guest_management`）の USDM Markdown を更新し、`../.venv/bin/python -m md2usdm` で Excel を再生成する
 - [ ] 1.4 [S02-02-01, S02-02-02, S02-02-03, S02-02-04, S02-02-05] 注文・会計・売上系5サブシステム（`dine_in_ordering`, `takeout_ordering`, `order_management`, `accounting_management`, `sales_management`）の USDM Markdown を更新し、`../.venv/bin/python -m md2usdm` で Excel を再生成する
 
 ## 2. サブシステムへの実装委譲と成果物確認（単体試験完了まで）
