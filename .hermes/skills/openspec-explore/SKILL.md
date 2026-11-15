@@ -10,16 +10,31 @@ metadata:
   generatedBy: "1.16.1"
 ---
 
-## プロジェクト固有ルール: USDM 仕様書とワークフロー
+## プロジェクト固有ルール: USDM 仕様書とワークフロー（USDM ＋ 1サブタスク＝1コミット規約）
 
-このリポジトリは MachinakaRestaurantSupportTools 全体システムの管理拠点で、仕様書は **USDM Markdown** です。以下のルールは上記の記述と矛盾する場合、こちらを優先してください。
+このリポジトリは MachinakaRestaurantSupportTools 全体システムの管理拠点で、OpenSpec は **`usdm` スキーマ**（`proposal` → `usdm` → `specs` → `design` → `tasks`）を使用します。以下のルールは上記の記述と矛盾する場合、こちらを優先してください。
 
-- 仕様の正本は `usdm/` 配下の9プロジェクト: 全体 = `usdm/machinaka_restaurant_support_tools/`、サブシステム8件 = `usdm/accounting_management/`・`usdm/dine_in_ordering/`・`usdm/guest_management/`・`usdm/menu_management/`・`usdm/order_management/`・`usdm/product_management/`・`usdm/sales_management/`・`usdm/takeout_ordering/`。記法は `../md2usdm/MANUAL.md`、完成例は `../md2usdm/examples/` を参照。
-- 全体システム設計は `docs/system-design.md`。仕様変更時は連携ポイント（結合試験範囲 I-1〜）・テスト戦略との整合も確認する。
-- 仕様 Markdown を追加・変更した後は、必ず `../.venv/bin/md2usdm usdm/<プロジェクト>` で Excel を再生成する（仮想環境はリポジトリルートに `../.venv`）。`.xlsx` は `.gitignore` 済みでコミット対象ではない。
-- openspec のタスクは3種で書く: 「各サブシステムリポジトリへの実装委譲指示（対象リポジトリ・参照 USDM パス・単体試験までの完了条件を明記）」「サブシステム PR の確認」「このリポジトリでの結合試験・総合試験」。
-- opsx フロー: **propose** = 最初にこのリポジトリでブランチ `feature/<change-id>`（change 名と一致）を作成してからアーティファクト着手 → **apply** = USDM・全体設計の更新とタスク作成完了 → **archive** = 各サブシステムの単体試験状況を確認し、結合試験・総合試験を実施、完了で当該ブランチの GitHub プルリクエストを作成。main へマージ時はファイル一覧の更新（各サブシステム側の submodule 参照コミット更新）を行う。このフローでは結合・総合試験が完了するまで main にマージしない。
-- git commit / push / PR 作成はユーザーの明示的な指示でのみ実行し、それ以外でこのワークフロー中にコミットしない。
+- **日本語記述と USDM スキーマ準拠**:
+  - OpenSpec アーティファクト（`proposal.md`, `usdm.md`, `specs/**/spec.md`, `design.md`, `tasks.md`）および対話はすべて日本語で記述する。
+  - `proposal.md`: `## Why` セクションは50文字以上1000文字以内で背景・目的を簡潔に記述する。
+  - `usdm.md`: `affordd-prj/usdm-schema` のマークダウン形式定義（H1〜H6の固定見出し階層、全角山括弧 `＜＞`、仕様項目の `- □□□ **Sxx-yy-zz**:` ラベル）を厳守する。
+  - `specs/**/spec.md`: `openspec validate --strict` を通過させるため、各 `### Requirement:` 本文は500文字以内に収め、文中に必ず半角大文字の `SHALL` または `MUST` を含める。見出しには変更固有の連番（`R01` 等）を含めず恒久的な名前とし、直下の行に `**USDM**: R01-01` を記載する。各 `#### Scenario:` には必ず `**WHEN**`（または `**GIVEN**`）と `**THEN**` の両方を含める。
+- **仕様の正本（`usdm/`）と設計**:
+  - 正本は `usdm/` 配下の9プロジェクト: 全体 = `usdm/machinaka_restaurant_support_tools/`、サブシステム8件 = `usdm/accounting_management/`・`usdm/dine_in_ordering/`・`usdm/guest_management/`・`usdm/menu_management/`・`usdm/order_management/`・`usdm/product_management/`・`usdm/sales_management/`・`usdm/takeout_ordering/`。記法は `../md2usdm/MANUAL.md`、完成例は `../md2usdm/examples/` を参照。
+  - 全体システム設計は `docs/system-design.md`。仕様変更時は連携ポイント（結合試験範囲 I-1〜）・テスト戦略との整合も確認する。
+  - `usdm/` 配下の仕様 Markdown を追加・変更した後は、必ず `../.venv/bin/md2usdm usdm/<プロジェクト>` で Excel を再生成する（仮想環境は `../.venv`、`.xlsx` は `.gitignore` 済みでコミット対象外）。
+- **タスク粒度と 3種のタスク（`tasks.md`）**:
+  - 各チェックボックス項目（`- [ ] X.Y [Sxx-yy-zz] ...`）は **「1サブタスク ＝ 1コミット」** の粒度（変更ファイル数1〜5個程度、単独で検証・テストが通る最小単位）に分解する。
+  - フォーマッタ実行、Linter自動修正、`sed` 等による一括置換、パッケージ追加などの「コマンド実行による機械的な変更」は、手書きのロジック変更や仕様記述とは別の独立した1サブタスク（＝1コミット）として切り出す。
+  - タスクは「各サブシステムリポジトリへの実装委譲指示（対象リポジトリ・参照 USDM パス・単体試験までの完了条件を明記）」「サブシステム PR の確認」「このリポジトリでの結合試験・総合試験」の3種に区別して書く。
+- **実装・コミット規約（1サブタスク ＝ 1コミット）**:
+  - `apply` フェーズでは、`tasks.md` のチェックボックス1項目（1サブタスク）を完了するごとに、単独で検証・テストがパスする状態（Green State）を確認し、該当ファイルと `tasks.md` のチェック更新（`- [ ]` → `- [x]`）を含めて **必ず1サブタスクにつき1コミット** を作成する（複数サブタスクを1コミットにまとめることは厳禁）。
+  - 機械的変更と手動実装は完全に分離し、それぞれ独立した1コミットとして切り出す。
+  - コミットメッセージは1行目を `<type>(<scope>): <サブタスクの要約>` とし、本文に `Why:` と `What:` を記述し、末尾の Git Trailers に `Issue: #<Issue番号（該当なしは N/A）>` / `Task: <サブタスク識別子とUSDM仕様ID（例: 1.1 [S01-03-02]）>` / `Verification: <確認コマンド>` / `Executed-Command: <機械的変更時の実行コマンド全文、手動変更時は "manual">` を必ず記載する。
+- **opsx フローとアーカイブ時USDMラベル更新**:
+  - **propose**: 最初にブランチ `feature/<change-id>`（change 名と一致）を作成してからアーティファクトに着手する。
+  - **apply**: `tasks.md` の各サブタスクを「1サブタスク ＝ 1コミット」規約に従って順次実施・コミットする。全サブタスク完了後、全体テストおよび `openspec validate <change-name> --strict` の通過を確認する。
+  - **archive**: 各サブシステムの単体試験状況（PR 状態）を確認し、結合試験・総合試験を実施する。完了して閉じるタスク（`- [x]`）に対応する `usdm.md` 内の各仕様（`Sxx-yy-zz`）について、レビュー・実装・テストの完了状態に応じた USDM 仕様ラベルのチェック（`□□□` → `■□□` レビュー済み / `■■□` 実装済み / `■■■` テスト済み）を入れて `usdm.md` を更新・コミットし、`openspec validate <change-name> --strict` を通過させてからアーカイブする。完了で当該ブランチの GitHub プルリクエスト作成を提案する（`git push` / PR 作成はユーザーの明示的な指示でのみ実行し、結合・総合試験が完了するまで main にマージしない。main マージ時は各サブシステム側の submodule 参照コミットを更新する）。
 
 
 Enter explore mode. Think deeply. Visualize freely. Follow the conversation wherever it goes.
