@@ -1,0 +1,54 @@
+name: usdm
+version: 1
+description: USDM workflow - proposal → usdm → specs → design → tasks
+artifacts:
+  - id: proposal
+    generates: proposal.md
+    description: Initial proposal document outlining the change
+    template: proposal.md
+    instruction: |
+      Create proposal.md in Japanese. Why section must be 50-1000 chars.
+    requires: []
+
+  - id: usdm
+    generates: usdm.md
+    description: USDM requirement specification in affordd-prj/usdm-schema format
+    template: usdm.md
+    instruction: |
+      Create usdm.md in Japanese following affordd-prj/usdm-schema format (H1-H6 hierarchy, full-width ＜＞, - □□□ **Sxx-yy-zz**: labels).
+    requires:
+      - proposal
+
+  - id: specs
+    generates: "specs/**/*.md"
+    description: Detailed specifications for the change
+    template: spec.md
+    instruction: |
+      Create spec.md files in Japanese. Requirement body <= 500 chars with SHALL or MUST, **USDM**: metadata line, Scenario with **WHEN**/**GIVEN** and **THEN**.
+    requires:
+      - usdm
+
+  - id: design
+    generates: design.md
+    description: Technical design document with implementation details
+    template: design.md
+    instruction: |
+      Create design.md in Japanese.
+    requires:
+      - usdm
+
+  - id: tasks
+    generates: tasks.md
+    description: Implementation checklist with trackable tasks (1 subtask = 1 commit)
+    template: tasks.md
+    instruction: |
+      Create tasks.md in Japanese with 1 subtask = 1 commit granularity.
+    requires:
+      - specs
+      - design
+
+apply:
+  requires: [tasks]
+  tracks: tasks.md
+  instruction: |
+    Execute each subtask in tasks.md following 1 subtask = 1 commit with Git Trailers.
