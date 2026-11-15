@@ -1,19 +1,19 @@
 ↑ [1.要件](../index.md)
 
-# 【AccountingManagement_R01】サンプル要件
+# 【AccountingManagement_R01】会計・決済・連携管理
 
 ## 要求
 
-（要求内容を記述してください）
+各席および持ち帰り注文の会計を完了し、会計状況を顧客管理および売上管理と連携できること。
 
 ### 理由
 
-（理由を記述してください）
+正確な決済処理と、会計完了直後の席清掃フロー・売上計上の自動化を実現するため。
 
 ### 説明
 
-記載無し
+注文管理（I-3）、顧客管理（I-6）、売上管理（I-4）と連携する。
 
 ## 下位要求
 
-- [01 サンプル下位要件](./AccountingManagement_R01.DM01.md "【AccountingManagement_R01.DM01】")
+- [01 決済処理・帳票・状態連携仕様](./AccountingManagement_R01.DM01.md "【AccountingManagement_R01.DM01】")
