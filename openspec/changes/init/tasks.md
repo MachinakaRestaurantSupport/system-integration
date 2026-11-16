@@ -14,7 +14,7 @@
 - [x] 2.3 [S02-01-03] `guest-management` へ初期MVP実装（座席状態/来客受付/清掃再利用/会員ポイントI-6・単体試験）を委譲し、完了とPR作成を確認する（参照: `reference/system-integration/usdm/guest_management/`）
 - [x] 2.4 [S02-02-03] `order-management` へ初期MVP実装（統合注文モデル・かんばん状態遷移・会計金額算出I-1/I-2/I-3・単体試験）を委譲し、完了とPR作成を確認する（参照: `reference/system-integration/usdm/order_management/`）
 - [x] 2.5 [S02-02-01] `dine-in-ordering` へ初期MVP実装（席QRトークン検証・メニュー参照I-5・注文確定I-1・店内持ち帰り・単体試験）を委譲し、完了とPR作成を確認する（参照: `reference/system-integration/usdm/dine_in_ordering/`）
-- [ ] 2.6 [S02-02-02] `takeout-ordering` へ初期MVP実装（SNS認証スタブ・受取予約・状況確認・受取通知・注文確定I-2・単体試験）を委譲し、完了とPR作成を確認する（参照: `reference/system-integration/usdm/takeout_ordering/`）
+- [x] 2.6 [S02-02-02] `takeout-ordering` へ初期MVP実装（SNS認証スタブ・受取予約・状況確認・受取通知・注文確定I-2・単体試験）を委譲し、完了とPR作成を確認する（参照: `reference/system-integration/usdm/takeout_ordering/`）
 - [ ] 2.7 [S02-02-04] `accounting-management` へ初期MVP実装（決済処理I-3・席状態更新I-6・売上通知I-4・単体試験）を委譲し、完了とPR作成を確認する（参照: `reference/system-integration/usdm/accounting_management/`）
 - [ ] 2.8 [S02-02-05] `sales-management` へ初期MVP実装（売上レコード受信I-4・日次/月次/年次集計レポート・単体試験）を委譲し、完了とPR作成を確認する（参照: `reference/system-integration/usdm/sales_management/`）
 
