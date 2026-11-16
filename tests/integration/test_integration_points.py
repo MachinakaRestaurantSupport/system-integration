@@ -179,7 +179,6 @@ def test_i1_i2_i3_i4_i6_order_to_accounting_guest_sales(
     assert summary["by_channel"] == {"dine_in": 1960, "takeout": 850}
 
 
-
 def test_split_payment_same_table_and_master_price_validation(
     restaurant_system: RestaurantSystem,
 ) -> None:
