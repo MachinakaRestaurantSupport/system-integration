@@ -33,8 +33,8 @@ def test_e2e_dine_in_full_lifecycle(restaurant_system: RestaurantSystem) -> None
             "channel": "dine_in",
             "title": "ランチメニュー",
             "categories": [
-                {"name": "食事", "product_ids": [str(pasta["id"])]},
-                {"name": "飲料", "product_ids": [str(coffee["id"])]},
+                {"name": "食事", "product_ids": [pasta["id"]]},
+                {"name": "飲料", "product_ids": [coffee["id"]]},
             ],
         },
     )
@@ -43,20 +43,14 @@ def test_e2e_dine_in_full_lifecycle(restaurant_system: RestaurantSystem) -> None
     table = restaurant_system.guest.post(
         "/tables", json={"table_number": "A-1", "capacity": 4}
     ).json()
-    table_b = restaurant_system.guest.post(
-        "/tables", json={"table_number": "A-2", "capacity": 2}
-    ).json()
     guest = restaurant_system.guest.post(
         "/guests", json={"name": "佐藤花子", "email": "hanako@example.com"}
     ).json()
     occupied = restaurant_system.guest.post(
         f"/tables/{table['id']}/occupy", json={"party_size": 2}
     ).json()
-    occupied_b = restaurant_system.guest.post(
-        f"/tables/{table_b['id']}/occupy", json={"party_size": 1}
-    ).json()
 
-    # 3. 席QRでメニュー参照・注文（店内分 + 別席での店内発持ち帰り）
+    # 3. 席QRでメニュー参照・注文（同一席での店内分 + 店内発持ち帰り）
     assert len(restaurant_system.dine_in.get("/dine-in/menus").json()) == 1
     order_dine = restaurant_system.dine_in.post(
         "/dine-in/orders",
@@ -64,30 +58,16 @@ def test_e2e_dine_in_full_lifecycle(restaurant_system: RestaurantSystem) -> None
             "table_id": table["id"],
             "qr_token": occupied["qr_token"],
             "is_takeout_from_table": False,
-            "items": [
-                {
-                    "product_id": str(pasta["id"]),
-                    "product_name": pasta["name"],
-                    "unit_price": pasta["price"],
-                    "quantity": 1,
-                }
-            ],
+            "items": [{"product_id": pasta["id"], "quantity": 1}],
         },
     ).json()
     order_souvenir = restaurant_system.dine_in.post(
         "/dine-in/orders",
         json={
-            "table_id": table_b["id"],
-            "qr_token": occupied_b["qr_token"],
+            "table_id": table["id"],
+            "qr_token": occupied["qr_token"],
             "is_takeout_from_table": True,
-            "items": [
-                {
-                    "product_id": str(coffee["id"]),
-                    "product_name": coffee["name"],
-                    "unit_price": coffee["price"],
-                    "quantity": 2,
-                }
-            ],
+            "items": [{"product_id": coffee["id"], "quantity": 2}],
         },
     ).json()
 
@@ -97,20 +77,23 @@ def test_e2e_dine_in_full_lifecycle(restaurant_system: RestaurantSystem) -> None
             res = restaurant_system.order.patch(f"/orders/{oid}/status", json={"status": st})
             assert res.status_code == 200
 
-    # 5. 席A-1の請求合計確認 -> 会計完了
+    # 5. 席A-1の請求合計確認 -> 分割会計（1回目: occupied維持、2回目: cleaning遷移）
     bill = restaurant_system.order.get(f"/tables/{table['id']}/bill").json()
-    assert bill["total_amount"] == 1200
+    assert bill["total_amount"] == 2100
 
     p1 = restaurant_system.accounting.post(
         "/payments",
         json={"order_id": order_dine["order_id"], "method": "card", "received_amount": 1200},
     )
     assert p1.status_code == 201
+    assert restaurant_system.guest.get(f"/tables/{table['id']}").json()["status"] == "occupied"
+
     p2 = restaurant_system.accounting.post(
         "/payments",
         json={"order_id": order_souvenir["order_id"], "method": "qr", "received_amount": 900},
     )
     assert p2.status_code == 201
+    assert restaurant_system.guest.get(f"/tables/{table['id']}").json()["status"] == "cleaning"
 
     # 6. ポイント付与・席清掃完了で再利用可能へ
     pts = restaurant_system.guest.post(f"/guests/{guest['id']}/points", json={"delta": 21}).json()
