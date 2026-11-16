@@ -2,7 +2,7 @@
 
 ## 1. system-integration 仕様・全体設計の更新
 
-- [ ] 1.1 [S04-01-01, S04-02-01, S04-02-02, S04-03-01, S04-03-02] `docs/system-design.md` に商品ID型統一・分割会計時の清掃遷移条件・正本価格参照（I-5拡張）の契約を追記し、`openspec validate contract-hardening --strict` を確認する
+- [x] 1.1 [S04-01-01, S04-02-01, S04-02-02, S04-03-01, S04-03-02] `docs/system-design.md` に商品ID型統一・分割会計時の清掃遷移条件・正本価格参照（I-5拡張）の契約を追記し、`openspec validate contract-hardening --strict` を確認する
 - [ ] 1.2 [S04-01-01, S04-02-01, S04-02-02, S04-03-01, S04-03-02] 全体および対象4サブシステム（`product_management`, `accounting_management`, `dine_in_ordering`, `takeout_ordering`）の `usdm/` Markdown を更新し、`../.venv/bin/md2usdm` で Excel を再生成する
 
 ## 2. サブシステムへの実装委譲と成果物確認（単体試験完了まで）

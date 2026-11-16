@@ -25,7 +25,7 @@ MachinakaRestaurantSupportTools は、飲食店の業務をデジタル化する
 
 - **技術スタック**: 全8サブシステム共通で **Python 3.12 + FastAPI + Pydantic v2 + httpx + pytest + ruff** を採用する。
 - **サービス間通信**: REST/JSON（`httpx.Client`）。結合試験では `httpx.ASGITransport` を用いたインプロセス接続で疎結合に検証可能とする。
-- **共通規約**: 全サブシステムは `GET /health`（`{"status": "ok", "service": "<name>"}`）を公開する。
+- **共通規約**: 全サブシステムは `GET /health`（`{"status": "ok", "service": "<name>"}`）を公開する。また、商品ID・注文ID・顧客ID・席ID等のリソース識別子は全サブシステム共通で文字列型（`str`）に統一する。
 - 全体・各サブシステムの要求の正本は上記 USDM Markdown（Excel は生成物、非コミット）。
 
 ```mermaid
@@ -47,10 +47,10 @@ flowchart LR
 |---|---|---|---|
 | I-1 | 店内注文 → 注文管理 | 注文作成・更新 | `POST /orders` (`source="dine_in"`) |
 | I-2 | 持ち帰り注文 → 注文管理 | 事前注文の受領 | `POST /orders` (`source="takeout"`) |
-| I-3 | 注文管理 ↔ 会計管理 | 会計金額参照・決済完了通知 | `GET /orders/{id}` / `POST /orders/{id}/mark-paid` / `POST /payments` |
+| I-3 | 注文管理 ↔ 会計管理 | 会計金額参照・残高確認・決済完了通知 | `GET /orders/{id}`, `GET /tables/{id}/bill`, `POST /orders/{id}/mark-paid`, `POST /payments` |
 | I-4 | 会計/注文管理 → 売上管理 | 売上データ供給 | `POST /sales/records` |
-| I-5 | 商品/メニュー管理 → 各注文ツール | マスタ・公開メニュー参照 | `GET /products`, `GET /menus/{channel}` |
-| I-6 | 顧客管理 ↔ 会計/注文 | 来客受付・席状態更新・ポイント付与 | `POST /tables/{id}/occupy`, `POST /tables/{id}/request-cleaning`, `POST /tables/{id}/release`, `POST /guests/{id}/points` |
+| I-5 | 商品/メニュー管理 → 各注文ツール | マスタ・公開メニュー・正本価格参照 | `GET /products`, `GET /products/{id}`, `GET /menus/{channel}` |
+| I-6 | 顧客管理 ↔ 会計/注文 | 来客受付・席状態更新・ポイント付与 | `POST /tables/{id}/occupy`, `POST /tables/{id}/request-cleaning`（未払い注文0件時のみ）, `POST /tables/{id}/release`, `POST /guests/{id}/points` |
 
 ## 5. 非機能要件（全体）
 
