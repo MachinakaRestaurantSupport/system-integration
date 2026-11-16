@@ -9,7 +9,7 @@
 
 - [x] 2.1 [S04-01-01] `product-management` へ商品ID文字列型統一（`str`、`prod-<hex>`）の実装・単体試験を委譲する（参照: `reference/system-integration/usdm/product_management/`、完了条件: `pytest` / `ruff check` 全パス）
 - [x] 2.2 [S04-01-01] `product-management` の `feature/contract-hardening` 実装および単体試験完了を確認する
-- [ ] 2.3 [S04-02-01, S04-02-02] `accounting-management` へ席未払い注文残高チェック（`GET /tables/{table_id}/bill`）による分割会計時清掃遷移制御の実装・単体試験を委譲する（参照: `reference/system-integration/usdm/accounting_management/`、完了条件: `pytest` / `ruff check` 全パス）
+- [x] 2.3 [S04-02-01, S04-02-02] `accounting-management` へ席未払い注文残高チェック（`GET /tables/{table_id}/bill`）による分割会計時清掃遷移制御の実装・単体試験を委譲する（参照: `reference/system-integration/usdm/accounting_management/`、完了条件: `pytest` / `ruff check` 全パス）
 - [ ] 2.4 [S04-02-01, S04-02-02] `accounting-management` の `feature/contract-hardening` 実装および単体試験完了を確認する
 - [ ] 2.5 [S04-03-01] `dine-in-ordering` へ `ProductClient` 追加による注文時正本価格参照・持ち帰り可否検証の実装・単体試験を委譲する（参照: `reference/system-integration/usdm/dine_in_ordering/`、完了条件: `pytest` / `ruff check` 全パス）
 - [ ] 2.6 [S04-03-01] `dine-in-ordering` の `feature/contract-hardening` 実装および単体試験完了を確認する
