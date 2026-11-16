@@ -19,5 +19,5 @@
 | 種別 | 内容 | 仕様番号 |
 | --- | --- | --- |
 | 仕様 | `POST /payments` で注文金額に対する決済（現金・カード等）を完了し、レシート情報を返却できる（I-3） | 【AccountingManagement_R01.DM01-01】 |
-| 仕様 | 会計完了時、注文管理の支払済み更新（I-3）、顧客管理の席清掃要求（I-6）、売上管理への計上（I-4）を実行できる | 【AccountingManagement_R01.DM01-02】 |
+| 仕様 | 会計完了時、注文管理の支払済み更新（I-3）、売上管理への計上（I-4）を実行し、店内注文かつ `GET /tables/{table_id}/bill` で未払い注文が0件となった場合のみ顧客管理の席清掃要求（I-6）を実行できる | 【AccountingManagement_R01.DM01-02】 |
 | 仕様 | `GET /payments/{payment_id}` で会計履歴・帳票データを取得できる | 【AccountingManagement_R01.DM01-03】 |
