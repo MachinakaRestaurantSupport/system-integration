@@ -94,9 +94,7 @@ def test_e2e_dine_in_full_lifecycle(restaurant_system: RestaurantSystem) -> None
     # 4. かんばん進行
     for oid in (order_dine["order_id"], order_souvenir["order_id"]):
         for st in ("preparing", "ready", "served"):
-            res = restaurant_system.order.patch(
-                f"/orders/{oid}/status", json={"status": st}
-            )
+            res = restaurant_system.order.patch(f"/orders/{oid}/status", json={"status": st})
             assert res.status_code == 200
 
     # 5. 席A-1の請求合計確認 -> 会計完了
@@ -115,9 +113,7 @@ def test_e2e_dine_in_full_lifecycle(restaurant_system: RestaurantSystem) -> None
     assert p2.status_code == 201
 
     # 6. ポイント付与・席清掃完了で再利用可能へ
-    pts = restaurant_system.guest.post(
-        f"/guests/{guest['id']}/points", json={"delta": 21}
-    ).json()
+    pts = restaurant_system.guest.post(f"/guests/{guest['id']}/points", json={"delta": 21}).json()
     assert pts["points"] == 21
 
     released = restaurant_system.guest.post(f"/tables/{table['id']}/release").json()
@@ -184,9 +180,7 @@ def test_e2e_takeout_full_lifecycle(restaurant_system: RestaurantSystem) -> None
         == 200
     )
     assert (
-        restaurant_system.order.patch(
-            f"/orders/{oid}/status", json={"status": "ready"}
-        ).status_code
+        restaurant_system.order.patch(f"/orders/{oid}/status", json={"status": "ready"}).status_code
         == 200
     )
     notify = restaurant_system.takeout.post(f"/takeout/orders/{oid}/notify-ready")

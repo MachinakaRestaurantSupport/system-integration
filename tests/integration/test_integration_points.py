@@ -148,14 +148,9 @@ def test_i1_i2_i3_i4_i6_order_to_accounting_guest_sales(
     assert payment_res.json()["change_amount"] == 40
 
     # 注文管理側で paid=True になっていること
-    assert (
-        restaurant_system.order.get(f"/orders/{dine_order['order_id']}").json()["paid"] is True
-    )
+    assert restaurant_system.order.get(f"/orders/{dine_order['order_id']}").json()["paid"] is True
     # 顧客管理側で席が cleaning に遷移していること
-    assert (
-        restaurant_system.guest.get(f"/tables/{table['id']}").json()["status"]
-        == "cleaning"
-    )
+    assert restaurant_system.guest.get(f"/tables/{table['id']}").json()["status"] == "cleaning"
 
     # 持ち帰り注文もカード決済
     payment_takeout = restaurant_system.accounting.post(
