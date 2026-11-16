@@ -19,6 +19,6 @@
 ## 3. 結合試験・総合試験（system-integration）
 
 - [x] 3.1 [S04-03-01, S04-03-02] `tests/conftest.py` を更新し、`dine_in` および `takeout` アプリへ `product` サービスの `FastAPIBridgeTransport` を注入する
-- [ ] 3.2 [S04-01-01, S04-02-01, S04-02-02, S04-03-01, S04-03-02] `tests/integration/test_integration_points.py` を更新し、商品ID型統一・分割会計（2回目決済での席清掃遷移）・正本価格参照（改ざん単価無視と商品未存在エラー）の結合試験を追加・パスさせる
+- [x] 3.2 [S04-01-01, S04-02-01, S04-02-02, S04-03-01, S04-03-02] `tests/integration/test_integration_points.py` を更新し、商品ID型統一・分割会計（2回目決済での席清掃遷移）・正本価格参照（改ざん単価無視と商品未存在エラー）の結合試験を追加・パスさせる
 - [ ] 3.3 [S04-01-01, S04-02-01, S04-02-02, S04-03-01, S04-03-02] `tests/e2e/test_restaurant_e2e.py` を更新し、同一席での店内飲食＋店内発持ち帰りの分割会計E2Eシナリオを検証・パスさせる
 - [ ] 3.4 [S04-01-01] 機械的整形（`../.venv/bin/ruff check --fix` / `ruff format`）を適用し、全テストとリンターのパスを確認する
