@@ -20,7 +20,7 @@
 
 ## 3. 結合試験・総合試験（system-integration）
 
-- [ ] 3.1 [S03-01-01, S03-01-02, S03-01-03] `pyproject.toml` と結合試験ハーネス（8サブシステムを `ASGITransport` で接続するフィクスチャ）を追加し、`pytest` 実行基盤を確認する
+- [x] 3.1 [S03-01-01, S03-01-02, S03-01-03] `pyproject.toml` と結合試験ハーネス（8サブシステムを `ASGITransport` で接続するフィクスチャ）を追加し、`pytest` 実行基盤を確認する
 - [ ] 3.2 [S03-01-01, S03-01-02, S03-01-03] `tests/integration/test_integration_points.py` を実装し、連携ポイント I-1〜I-6 の結合試験をパスさせる
 - [ ] 3.3 [S03-01-01, S03-01-02, S03-01-03] `tests/e2e/test_restaurant_e2e.py` を実装し、店内飲食E2Eおよび持ち帰りE2Eの総合試験をパスさせる
 - [ ] 3.4 [S01-01-01] 機械的整形（`../.venv/bin/ruff check --fix` / `ruff format`）を適用し、全テストとリンターのパスを確認する
