@@ -9,7 +9,7 @@
 
 ## 2. サブシステムへの実装委譲と成果物確認（単体試験完了まで）
 
-- [ ] 2.1 [S02-01-01] `product-management` へ初期MVP実装（商品マスタCRUD・アレルギー/カロリー/持ち帰り可否・単体試験）を委譲し、完了とPR作成を確認する（参照: `reference/system-integration/usdm/product_management/`）
+- [x] 2.1 [S02-01-01] `product-management` へ初期MVP実装（商品マスタCRUD・アレルギー/カロリー/持ち帰り可否・単体試験）を委譲し、完了とPR作成を確認する（参照: `reference/system-integration/usdm/product_management/`）
 - [ ] 2.2 [S02-01-02] `menu-management` へ初期MVP実装（商品参照I-5・店内/持ち帰りメニュー作成公開・単体試験）を委譲し、完了とPR作成を確認する（参照: `reference/system-integration/usdm/menu_management/`）
 - [ ] 2.3 [S02-01-03] `guest-management` へ初期MVP実装（座席状態/来客受付/清掃再利用/会員ポイントI-6・単体試験）を委譲し、完了とPR作成を確認する（参照: `reference/system-integration/usdm/guest_management/`）
 - [ ] 2.4 [S02-02-03] `order-management` へ初期MVP実装（統合注文モデル・かんばん状態遷移・会計金額算出I-1/I-2/I-3・単体試験）を委譲し、完了とPR作成を確認する（参照: `reference/system-integration/usdm/order_management/`）
