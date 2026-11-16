@@ -23,6 +23,9 @@ from dine_in_ordering.clients import (
 from dine_in_ordering.clients import (
     OrderClient as DineInOrderClient,
 )
+from dine_in_ordering.clients import (
+    ProductClient as DineInProductClient,
+)
 from dine_in_ordering.main import create_app as create_dine_in_app
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
@@ -37,6 +40,9 @@ from takeout_ordering.clients import (
 )
 from takeout_ordering.clients import (
     OrderClient as TakeoutOrderClient,
+)
+from takeout_ordering.clients import (
+    ProductClient as TakeoutProductClient,
 )
 from takeout_ordering.main import create_app as create_takeout_app
 
@@ -102,6 +108,10 @@ def restaurant_system() -> RestaurantSystem:
             base_url="http://order-management",
             transport=FastAPIBridgeTransport(order_app),
         ),
+        product_client=DineInProductClient(
+            base_url="http://product-management",
+            transport=FastAPIBridgeTransport(product_app),
+        ),
     )
     takeout_app = create_takeout_app(
         menu_client=TakeoutMenuClient(
@@ -111,6 +121,10 @@ def restaurant_system() -> RestaurantSystem:
         order_client=TakeoutOrderClient(
             base_url="http://order-management",
             transport=FastAPIBridgeTransport(order_app),
+        ),
+        product_client=TakeoutProductClient(
+            base_url="http://product-management",
+            transport=FastAPIBridgeTransport(product_app),
         ),
     )
     accounting_app = create_accounting_app(
