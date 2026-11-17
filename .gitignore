@@ -1,0 +1,9 @@
+# md2usdm で生成される Excel は成果物としてコミットしない
+usdm/**/*.xlsx
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.venv/

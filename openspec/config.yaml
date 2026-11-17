@@ -1,0 +1,47 @@
+schema: usdm
+githubCopilot:
+  cloudAgent: false
+
+context: |
+  このリポジトリは MachinakaRestaurantSupportTools 全体システムの管理拠点。仕様書は USDM (Universal Specification Describing Manner) 形式の Markdown で記述し、OpenSpec は `usdm` スキーマ（proposal → usdm → specs → design → tasks）を使用する。
+  - OpenSpec アーティファクト（proposal.md, usdm.md, specs/**/spec.md, design.md, tasks.md）および対話はすべて日本語で記述すること。
+  - 仕様の正本は `usdm/` 配下:
+    - 全体: `usdm/machinaka_restaurant_support_tools/`（コンポーネント名 MachinakaRestaurantSupportTools）
+    - サブシステム8件: `usdm/accounting_management/`, `usdm/dine_in_ordering/`, `usdm/guest_management/`, `usdm/menu_management/`, `usdm/order_management/`, `usdm/product_management/`, `usdm/sales_management/`, `usdm/takeout_ordering/`
+  - 全体システム設計は `docs/system-design.md`。連携ポイント（結合試験の範囲、I-1〜）とテスト戦略をこの文書で管理する。
+  - USDM の記法（上位要求 / 下位要求 / 理由 / 説明 / 仕様テーブル）は `../md2usdm/MANUAL.md`、完成例は `../md2usdm/examples/`、OpenSpec 内の `usdm.md` は `affordd-prj/usdm-schema` のマークダウン形式定義を参照する。
+  - Python 仮想環境はリポジトリルート側の `../.venv`。`usdm/` 配下の仕様 Markdown を更新したら必ず `../.venv/bin/md2usdm usdm/<プロジェクト>` で Excel を再生成する。`.xlsx` は `.gitignore` 登録済みでコミット対象ではない（正本は Markdown のみ）。
+  - openspec のタスクの役割: (1) 各サブシステムリポジトリで実施させる実装指示（対象リポジトリ・参照 USDM パス・受け入れ条件を明記）、(2) 各サブシステムの PR（単体試験完了まで）の確認、(3) このリポジトリでの結合試験・総合試験。
+  - opsx フロー: propose = 最初にこのリポジトリでブランチ `feature/<change-id>` を作成してからアーティファクト着手 / apply = tasks.md の各サブタスクを「1サブタスク ＝ 1コミット」規約に従って順次実施・コミット / archive = 各サブシステムの単体試験状況確認 → 結合試験・総合試験 → usdm.md のUSDM仕様ラベル更新・コミット → アーカイブ → 完了で GitHub プルリクエスト作成。結合・総合試験が完了するまで main にマージしない。main マージ時はファイル一覧の更新（各サブシステム側の submodule 参照コミット更新）を行う。
+  - このフローでは各サブシステムの submodule 参照ブランチが `feature/<change-id>` に切り替えられる。サブシステム PR マージ時に各自 main へ戻される。
+  - push / PR 作成はユーザーの明示的な指示でのみ実行する（サブタスク単位のローカル git commit は「1サブタスク ＝ 1コミット」規約に従い実行する）。
+
+rules:
+  proposal:
+    - "## Why セクションは50文字以上1000文字以内で背景・目的を簡潔に記述すること"
+  usdm:
+    - "affordd-prj/usdm-schema のマークダウン形式定義（H1〜H6の固定見出し階層、全角山括弧＜＞、□□□ラベル）を厳守すること"
+    - "サブシステムの仕様変更時は、全体 USDM（`usdm/` 配下の該当プロジェクト・全体プロジェクト）および `docs/system-design.md`（連携ポイント・非機能要件）との整合も確認すること"
+  specs:
+    - "openspec validate --strict を通過させるため、各 Requirement 本文は500文字以内に収め、文中に必ず半角大文字の SHALL または MUST（例: 〜しなければならない（SHALL）。）を含めること"
+    - "各 Scenario には必ず **WHEN**（または **GIVEN**）と **THEN** の両方を含めること"
+    - "### Requirement: の見出しには変更固有の連番（R01等）を含めず恒久的な名前とし、直下の行に **USDM**: R01-01 のメタデータ行として要求IDを記録すること"
+    - "仕様アーティファクトは `usdm/` の9プロジェクトのいずれかに反映し、追加・更新後は必ず `../.venv/bin/md2usdm usdm/<プロジェクト>` で Excel を再生成すること"
+  tasks:
+    - "各チェックボックス項目（`- [ ] X.Y [Sxx-yy-zz] ...`）は「1サブタスク ＝ 1コミット」の粒度（変更ファイル数1〜5個程度、単独で検証・テストが通る最小単位）に分解すること"
+    - "フォーマッタ、Linter自動修正、マイグレーション生成、`sed` 等による一括置換、パッケージ追加など「コマンド実行による機械的な変更」は、必ず手書きのロジック変更や仕様記述とは別の独立した1サブタスク（＝1コミット）として切り出すこと"
+    - "タスクは「サブシステムへの委譲指示」「サブシステム成果物の確認（実装〜単体試験）」「このリポジトリでの結合試験・総合試験」の3種に区別して書き、委譲指示タスクには対象リポジトリ、参照 USDM パス（サブシステム側の `reference/system-integration/usdm/<プロジェクト>/`）、完了条件（単体試験まで）を明記すること"
+
+operations:
+  apply:
+    guidance:
+      - "タスクのチェックボックス1項目（1サブタスク）の遂行都度、単独で検証・テストがパスする状態（Green State）を確認し、`tasks.md` のチェック更新（`- [ ]` → `- [x]`）を含めて必ず「1サブタスク ＝ 1コミット」でコミットすること（複数サブタスクを1つのコミットにまとめることは厳禁）"
+      - "フォーマッタ、Linter自動修正、マイグレーション生成、`sed` 等による一括置換、パッケージ追加などの機械的変更は、手書きの変更とは完全に分離して独立した1コミットとして切り出すこと"
+      - "コミットメッセージは1行目を `<type>(<scope>): <サブタスクの要約>` とし、本文に `Why: <目的・背景>` と `What: <変更内容>`、末尾の Git Trailers に `Issue: #<Issue番号>` / `Task: <サブタスクの識別子とUSDM仕様ID>` / `Verification: <確認コマンド>` / `Executed-Command: <機械的変更時の実行コマンド全文、手動変更時は \"manual\">` を厳守すること"
+      - "`usdm/` 配下の USDM Markdown を変更した場合は `../.venv/bin/md2usdm usdm/<プロジェクト>` で該当プロジェクトの Excel を再生成すること（`.xlsx` はコミット対象外）"
+      - "`tasks.md` のすべてのチェックボックス項目の実装・コミットが完了したら、結合試験・総合試験および `openspec validate <change-name> --strict` を実行してすべてパスすることを確認し、GitHub プルリクエスト作成を提案すること（push / PR 作成はユーザーの明示的指示後に実行）"
+  archive:
+    guidance:
+      - "アーカイブ前に各サブシステムの単体試験状況（PR の状態）を確認し、その後このリポジトリで結合試験・総合試験を実施すること"
+      - "アーカイブ実行時、完了して閉じるタスク（`- [x]`）に対応する `usdm.md` 内の各仕様（`Sxx-yy-zz`）について、要件のレビュー・実装・テストの完了状態に応じた USDM 仕様ラベルのチェック（`□□□` → `■□□` レビュー済み / `■■□` 実装済み / `■■■` テスト済み）を入れて `usdm.md` を更新・コミットし、`openspec validate <change-name> --strict` を通過させてからアーカイブすること"
+      - "メイン仕様を `usdm/` の該当プロジェクトに反映した後は `../.venv/bin/md2usdm usdm/<プロジェクト>` で Excel を再生成すること"
