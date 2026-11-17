@@ -1,3 +1,4 @@
+# ruff: noqa: I001
 """Integration test harness connecting all 8 subsystem FastAPI apps in-process."""
 
 from dataclasses import dataclass
