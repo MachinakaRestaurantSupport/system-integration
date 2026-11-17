@@ -1,6 +1,10 @@
 """End-to-end system tests covering full restaurant workflows."""
 
+from pathlib import Path
+
 from conftest import RestaurantSystem
+
+from system_integration.doc_artifacts import PROJECT_SPECS, capture_and_generate_docs
 
 
 def test_e2e_dine_in_full_lifecycle(restaurant_system: RestaurantSystem) -> None:
@@ -182,3 +186,228 @@ def test_e2e_takeout_full_lifecycle(restaurant_system: RestaurantSystem) -> None
     daily = restaurant_system.sales.get(f"/sales/summary/daily?date={paid_date}").json()
     assert daily["total_amount"] == 2200
     assert daily["by_channel"] == {"dine_in": 0, "takeout": 2200}
+
+
+def test_e2e_zzz_capture_portal_and_subsystem_screens(
+    restaurant_system: RestaurantSystem,
+) -> None:
+    """総合試験最終ステップ: 実データ投入状態でポータル・全画面を自動キャプチャ・遷移図更新."""
+    # 1. 商品登録 (product-management)
+    pasta = restaurant_system.product.post(
+        "/products",
+        json={
+            "name": "ボロネーゼ",
+            "category": "パスタ",
+            "price": 1200,
+            "allergens": ["小麦", "牛肉"],
+            "calories": 780,
+            "prep_time_minutes": 12,
+            "options": ["大盛り", "粉チーズ増量"],
+            "takeout_available": True,
+        },
+    ).json()
+    coffee = restaurant_system.product.post(
+        "/products",
+        json={
+            "name": "ブレンドコーヒー",
+            "category": "ドリンク",
+            "price": 450,
+            "calories": 15,
+            "prep_time_minutes": 4,
+            "options": ["ホット", "アイス"],
+            "takeout_available": True,
+        },
+    ).json()
+    steak = restaurant_system.product.post(
+        "/products",
+        json={
+            "name": "特製鉄板ハンバーグ",
+            "category": "メイン",
+            "price": 1480,
+            "allergens": ["牛肉", "卵", "乳"],
+            "calories": 860,
+            "prep_time_minutes": 15,
+            "options": ["デミグラス", "おろしポン酢"],
+            "takeout_available": False,
+        },
+    ).json()
+    bento = restaurant_system.product.post(
+        "/products",
+        json={
+            "name": "幕の内弁当",
+            "category": "弁当",
+            "price": 1100,
+            "allergens": ["小麦", "卵", "大豆"],
+            "calories": 720,
+            "prep_time_minutes": 10,
+            "options": ["ごはん大盛"],
+            "takeout_available": True,
+        },
+    ).json()
+
+    # 2. メニュー構成・公開 (menu-management)
+    restaurant_system.menu.post(
+        "/menus",
+        json={
+            "channel": "dine_in",
+            "title": "ランチ・グランドメニュー",
+            "categories": [
+                {"name": "食事", "product_ids": [str(pasta["id"]), str(steak["id"])]},
+                {"name": "ドリンク", "product_ids": [str(coffee["id"])]},
+            ],
+        },
+    )
+    restaurant_system.menu.post(
+        "/menus",
+        json={
+            "channel": "takeout",
+            "title": "お持ち帰り専用メニュー",
+            "categories": [
+                {"name": "お弁当", "product_ids": [str(bento["id"])]},
+                {"name": "ドリンク", "product_ids": [str(coffee["id"])]},
+            ],
+        },
+    )
+
+    # 3. 座席・会員準備と来客受付 (guest-management)
+    t_a1 = restaurant_system.guest.post(
+        "/tables", json={"table_number": "A-1", "capacity": 4}
+    ).json()
+    t_a2 = restaurant_system.guest.post(
+        "/tables", json={"table_number": "A-2", "capacity": 2}
+    ).json()
+    restaurant_system.guest.post("/tables", json={"table_number": "B-1", "capacity": 4})
+    occ_a1 = restaurant_system.guest.post(
+        f"/tables/{t_a1['id']}/occupy", json={"party_size": 2}
+    ).json()
+    occ_a2 = restaurant_system.guest.post(
+        f"/tables/{t_a2['id']}/occupy", json={"party_size": 2}
+    ).json()
+    g1 = restaurant_system.guest.post(
+        "/guests", json={"name": "佐藤花子", "email": "hanako@example.com"}
+    ).json()
+    g2 = restaurant_system.guest.post(
+        "/guests", json={"name": "山田太郎", "email": "taro@example.com"}
+    ).json()
+    restaurant_system.guest.post(f"/guests/{g1['id']}/points", json={"delta": 32})
+    restaurant_system.guest.post(f"/guests/{g2['id']}/points", json={"delta": 15})
+
+    # 4. 店内注文 + 店外持ち帰り注文 (dine-in / takeout)
+    ord_served = restaurant_system.dine_in.post(
+        "/dine-in/orders",
+        json={
+            "table_id": t_a1["id"],
+            "qr_token": occ_a1["qr_token"],
+            "is_takeout_from_table": False,
+            "items": [
+                {
+                    "product_id": str(pasta["id"]),
+                    "product_name": pasta["name"],
+                    "unit_price": pasta["price"],
+                    "quantity": 1,
+                },
+                {
+                    "product_id": str(coffee["id"]),
+                    "product_name": coffee["name"],
+                    "unit_price": coffee["price"],
+                    "quantity": 1,
+                },
+            ],
+        },
+    ).json()
+    ord_preparing = restaurant_system.dine_in.post(
+        "/dine-in/orders",
+        json={
+            "table_id": t_a2["id"],
+            "qr_token": occ_a2["qr_token"],
+            "is_takeout_from_table": False,
+            "items": [
+                {
+                    "product_id": str(steak["id"]),
+                    "product_name": steak["name"],
+                    "unit_price": steak["price"],
+                    "quantity": 1,
+                }
+            ],
+        },
+    ).json()
+    restaurant_system.dine_in.post(
+        "/dine-in/orders",
+        json={
+            "table_id": t_a2["id"],
+            "qr_token": occ_a2["qr_token"],
+            "is_takeout_from_table": True,
+            "items": [
+                {
+                    "product_id": str(coffee["id"]),
+                    "product_name": coffee["name"],
+                    "unit_price": coffee["price"],
+                    "quantity": 2,
+                }
+            ],
+        },
+    )
+
+    login = restaurant_system.takeout.post(
+        "/auth/login",
+        json={"provider": "google", "oauth_token": "goog-demo", "display_name": "鈴木一郎"},
+    ).json()
+    restaurant_system.takeout.post(
+        "/auth/login",
+        json={"provider": "line", "oauth_token": "line-demo", "display_name": "高橋美咲"},
+    )
+    ord_takeout = restaurant_system.takeout.post(
+        "/takeout/orders",
+        json={
+            "customer_id": login["customer_id"],
+            "pickup_at": "2026-11-18T19:00:00+09:00",
+            "items": [
+                {
+                    "product_id": str(bento["id"]),
+                    "product_name": bento["name"],
+                    "unit_price": bento["price"],
+                    "quantity": 2,
+                }
+            ],
+        },
+    ).json()
+
+    # 5. かんばん進行: received / preparing / ready / served 全列に注文が存在する状態へ
+    for st in ("preparing", "ready", "served"):
+        restaurant_system.order.patch(
+            f"/orders/{ord_served['order_id']}/status", json={"status": st}
+        )
+    restaurant_system.order.patch(
+        f"/orders/{ord_preparing['order_id']}/status", json={"status": "preparing"}
+    )
+    for st in ("preparing", "ready"):
+        restaurant_system.order.patch(
+            f"/orders/{ord_takeout['order_id']}/status", json={"status": st}
+        )
+    restaurant_system.takeout.post(f"/takeout/orders/{ord_takeout['order_id']}/notify-ready")
+
+    # 6. 会計決済 (accounting-management) -> A-1 が cleaning になり、売上も計上される
+    p1 = restaurant_system.accounting.post(
+        "/payments",
+        json={"order_id": ord_served["order_id"], "method": "card", "received_amount": 1650},
+    )
+    assert p1.status_code == 201
+    p2 = restaurant_system.accounting.post(
+        "/payments",
+        json={"order_id": ord_takeout["order_id"], "method": "cash", "received_amount": 3000},
+    )
+    assert p2.status_code == 201
+
+    # 7. ポータルおよび全8サブシステム画面をキャプチャし、draw.io + SVG 遷移図を自動更新
+    docs_images_dir = Path(__file__).resolve().parents[2] / "docs" / "images"
+    generated = capture_and_generate_docs(restaurant_system, docs_images_dir)
+
+    assert len(generated) == len(PROJECT_SPECS)
+    for spec in PROJECT_SPECS:
+        paths = generated[spec.key]
+        assert len(paths) == 5  # 3 PNGs + transition.drawio + transition.svg
+        for p in paths:
+            assert p.exists() and p.stat().st_size > 0
+        assert "<mxfile" in paths[3].read_text(encoding="utf-8")
+        svg_text = paths[4].read_text(encoding="utf-8")
+        assert "<svg" in svg_text and "data:image/png;base64," in svg_text
