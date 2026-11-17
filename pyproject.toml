@@ -7,6 +7,7 @@ requires-python = ">=3.12"
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = [
+    "src",
     "../product-management/src",
     "../menu-management/src",
     "../guest-management/src",
@@ -20,3 +21,6 @@ pythonpath = [
 [tool.ruff]
 line-length = 100
 target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]

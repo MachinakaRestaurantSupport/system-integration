@@ -32,6 +32,7 @@ from menu_management.main import create_app as create_menu_app
 from order_management.main import create_app as create_order_app
 from product_management.main import create_app as create_product_app
 from sales_management.main import create_app as create_sales_app
+from system_integration.portal import create_portal_app
 from takeout_ordering.clients import (
     MenuClient as TakeoutMenuClient,
 )
@@ -39,6 +40,8 @@ from takeout_ordering.clients import (
     OrderClient as TakeoutOrderClient,
 )
 from takeout_ordering.main import create_app as create_takeout_app
+
+from system_integration.portal import create_portal_app
 
 
 class FastAPIBridgeTransport(httpx.BaseTransport):
@@ -63,7 +66,7 @@ class FastAPIBridgeTransport(httpx.BaseTransport):
 
 @dataclass
 class RestaurantSystem:
-    """Bundle of TestClients for all 8 interconnected subsystems."""
+    """Bundle of TestClients for all 8 interconnected subsystems and the staff portal."""
 
     product: TestClient
     menu: TestClient
@@ -73,6 +76,7 @@ class RestaurantSystem:
     takeout: TestClient
     accounting: TestClient
     sales: TestClient
+    portal: TestClient
 
 
 @pytest.fixture()
@@ -128,13 +132,33 @@ def restaurant_system() -> RestaurantSystem:
         ),
     )
 
+    product_client = TestClient(product_app)
+    menu_client = TestClient(menu_app)
+    guest_client = TestClient(guest_app)
+    order_client = TestClient(order_app)
+    dine_in_client = TestClient(dine_in_app)
+    takeout_client = TestClient(takeout_app)
+    accounting_client = TestClient(accounting_app)
+    sales_client = TestClient(sales_app)
+    portal_app = create_portal_app(
+        product=product_client,
+        menu=menu_client,
+        guest=guest_client,
+        order=order_client,
+        dine_in=dine_in_client,
+        takeout=takeout_client,
+        accounting=accounting_client,
+        sales=sales_client,
+    )
+
     return RestaurantSystem(
-        product=TestClient(product_app),
-        menu=TestClient(menu_app),
-        guest=TestClient(guest_app),
-        order=TestClient(order_app),
-        dine_in=TestClient(dine_in_app),
-        takeout=TestClient(takeout_app),
-        accounting=TestClient(accounting_app),
-        sales=TestClient(sales_app),
+        product=product_client,
+        menu=menu_client,
+        guest=guest_client,
+        order=order_client,
+        dine_in=dine_in_client,
+        takeout=takeout_client,
+        accounting=accounting_client,
+        sales=sales_client,
+        portal=TestClient(portal_app),
     )
