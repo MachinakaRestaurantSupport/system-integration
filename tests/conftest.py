@@ -1,3 +1,4 @@
+# ruff: noqa: I001
 """Integration test harness connecting all 8 subsystem FastAPI apps in-process."""
 
 from dataclasses import dataclass
@@ -23,6 +24,9 @@ from dine_in_ordering.clients import (
 from dine_in_ordering.clients import (
     OrderClient as DineInOrderClient,
 )
+from dine_in_ordering.clients import (
+    ProductClient as DineInProductClient,
+)
 from dine_in_ordering.main import create_app as create_dine_in_app
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
@@ -32,12 +36,14 @@ from menu_management.main import create_app as create_menu_app
 from order_management.main import create_app as create_order_app
 from product_management.main import create_app as create_product_app
 from sales_management.main import create_app as create_sales_app
-from system_integration.portal import create_portal_app
 from takeout_ordering.clients import (
     MenuClient as TakeoutMenuClient,
 )
 from takeout_ordering.clients import (
     OrderClient as TakeoutOrderClient,
+)
+from takeout_ordering.clients import (
+    ProductClient as TakeoutProductClient,
 )
 from takeout_ordering.main import create_app as create_takeout_app
 
@@ -106,6 +112,10 @@ def restaurant_system() -> RestaurantSystem:
             base_url="http://order-management",
             transport=FastAPIBridgeTransport(order_app),
         ),
+        product_client=DineInProductClient(
+            base_url="http://product-management",
+            transport=FastAPIBridgeTransport(product_app),
+        ),
     )
     takeout_app = create_takeout_app(
         menu_client=TakeoutMenuClient(
@@ -115,6 +125,10 @@ def restaurant_system() -> RestaurantSystem:
         order_client=TakeoutOrderClient(
             base_url="http://order-management",
             transport=FastAPIBridgeTransport(order_app),
+        ),
+        product_client=TakeoutProductClient(
+            base_url="http://product-management",
+            transport=FastAPIBridgeTransport(product_app),
         ),
     )
     accounting_app = create_accounting_app(
