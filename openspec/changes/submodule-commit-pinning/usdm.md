@@ -38,8 +38,8 @@
 
 全8サブシステムの `.gitmodules` から `branch` 設定を完全に廃止し、各リポジトリのガイドライン・OpenSpec 運用状態を新方式へ統一すること。
 
-- □□□ **S05-01-01**: 全8サブシステムの `.gitmodules` から `branch` 設定を廃止して `path` と `url` のみとし、`reference/system-integration` は確定コミット SHA（gitlink）指定のみで管理すること。
-- □□□ **S05-01-02**: `system-integration` および全8サブシステムの `AGENTS.md`・`openspec/config.yaml`・`docs/system-design.md`・OpenSpec スキル定義を「submodule コミット SHA 指定＋`system-integration` 先行 Merge commit 固定」ルールへ統一し、各サブシステムの未アーカイブ `init` 変更をアーカイブ完了状態にすること。
+- ■■■ **S05-01-01**: 全8サブシステムの `.gitmodules` から `branch` 設定を廃止して `path` と `url` のみとし、`reference/system-integration` は確定コミット SHA（gitlink）指定のみで管理すること。
+- ■■■ **S05-01-02**: `system-integration` および全8サブシステムの `AGENTS.md`・`openspec/config.yaml`・`docs/system-design.md`・OpenSpec スキル定義を「submodule コミット SHA 指定＋`system-integration` 先行 Merge commit 固定」ルールへ統一し、各サブシステムの未アーカイブ `init` 変更をアーカイブ完了状態にすること。
 
 ##### ＜R05-02＞E2E ドキュメント生成の冪等化と読み取り専用サブモジュール保護
 
@@ -47,4 +47,4 @@
 
 `system-integration` の E2E 自動キャプチャ処理が、実行日に依存したハッシュ不一致や他リポジトリのサブモジュールへのファイル上書きを行わないこと。
 
-- □□□ **S05-02-01**: `system-integration` の `doc_artifacts.py` から `_sync_to_subsystem_submodules` による読み取り専用サブモジュールへの直接ファイルコピーを廃止し、`_normalize_html_for_hash` で単独日付（`YYYY-MM-DD`）を正規化することで、実行日に依存せず作業ツリーを汚染しないこと。
+- ■■■ **S05-02-01**: `system-integration` の `doc_artifacts.py` から `_sync_to_subsystem_submodules` による読み取り専用サブモジュールへの直接ファイルコピーを廃止し、`_normalize_html_for_hash` で単独日付（`YYYY-MM-DD`）を正規化することで、実行日に依存せず作業ツリーを汚染しないこと。
