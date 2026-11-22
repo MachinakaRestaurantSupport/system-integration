@@ -34,7 +34,7 @@ metadata:
 - **opsx フローとアーカイブ時USDMラベル更新**:
   - **propose**: 最初にブランチ `feature/<change-id>`（change 名と一致）を作成してからアーティファクトに着手する。
   - **apply**: `tasks.md` の各サブタスクを「1サブタスク ＝ 1コミット」規約に従って順次実施・コミットする。全サブタスク完了後、全体テストおよび `openspec validate <change-name> --strict` の通過を確認する。
-  - **archive**: 各サブシステムの単体試験状況（PR 状態）を確認し、結合試験・総合試験を実施する。完了して閉じるタスク（`- [x]`）に対応する `usdm.md` 内の各仕様（`Sxx-yy-zz`）について、レビュー・実装・テストの完了状態に応じた USDM 仕様ラベルのチェック（`□□□` → `■□□` レビュー済み / `■■□` 実装済み / `■■■` テスト済み）を入れて `usdm.md` を更新・コミットし、`openspec validate <change-name> --strict` を通過させてからアーカイブする。完了で当該ブランチの GitHub プルリクエスト作成を提案する（`git push` / PR 作成はユーザーの明示的な指示でのみ実行し、結合・総合試験が完了するまで main にマージしない。main マージ時は各サブシステム側の submodule 参照コミットを更新する）。
+  - **archive**: 各サブシステムの単体試験状況（PR 状態）を確認し、結合試験・総合試験を実施する。完了して閉じるタスク（`- [x]`）に対応する `usdm.md` 内の各仕様（`Sxx-yy-zz`）について、レビュー・実装・テストの完了状態に応じた USDM 仕様ラベルのチェック（`□□□` → `■□□` レビュー済み / `■■□` 実装済み / `■■■` テスト済み）を入れて `usdm.md` を更新・コミットし、`openspec validate <change-name> --strict` を通過させてからアーカイブする。完了で当該ブランチの GitHub プルリクエスト作成を提案する（`git push` / PR 作成はユーザーの明示的な指示でのみ実行し、結合・総合試験が完了するまで `main` にマージしない。マージ前にサブシステムの `reference/system-integration` を確定コミット SHA へ揃え、マージ時は先にこのリポジトリの PR を Create a merge commit（Squash 禁止）で `main` にマージしてから各サブシステム PR をそのまま `main` にマージする（マージ後の submodule 戻し作業は不要））。
 
 
 Propose a new change - create the change and generate all artifacts in one step.
