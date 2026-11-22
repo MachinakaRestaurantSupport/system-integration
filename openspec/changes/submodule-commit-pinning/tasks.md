@@ -23,4 +23,4 @@
 
 ## 4. 横断検証と最終結合確認（system-integration）
 
-- [ ] 4.1 [S05-01-01, S05-01-02, S05-02-01] 全9リポジトリの横断 `grep` で旧 submodule ブランチ切り替え記述・`.gitmodules` の `branch` 行・未アーカイブ change がゼロであることを確認し、`system-integration` の `pytest -q`・`ruff check .`・`ruff format --check` 実行後に全9リポジトリに未コミット差分が生じないことを検証する
+- [x] 4.1 [S05-01-01, S05-01-02, S05-02-01] 全9リポジトリの横断 `grep` で旧 submodule ブランチ切り替え記述・`.gitmodules` の `branch` 行・未アーカイブ change がゼロであることを確認し、`system-integration` の `pytest -q`・`ruff check .`・`ruff format --check` 実行後に全9リポジトリに未コミット差分が生じないことを検証する
