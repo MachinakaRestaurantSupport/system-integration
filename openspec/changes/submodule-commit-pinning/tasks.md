@@ -2,7 +2,7 @@
 
 ## 1. system-integration の仕様・ドキュメント・ルール整備
 
-- [ ] 1.1 [S05-01-02] `docs/system-design.md`（7章）と `AGENTS.md` を「submodule コミット SHA 指定＋`system-integration` 先行 Merge commit 固定＋親ハブPR目次・横断URL確認」ルールへ更新する
+- [x] 1.1 [S05-01-02] `docs/system-design.md`（7章）と `AGENTS.md` を「submodule コミット SHA 指定＋`system-integration` 先行 Merge commit 固定＋親ハブPR目次・横断URL確認」ルールへ更新する
 - [ ] 1.2 [S05-01-02] `openspec/config.yaml` および `.agents/`・`.hermes/` 配下の OpenSpec スキル定義から旧 submodule ブランチ切り替え記述を排除し新ルールへ統一する
 
 ## 2. E2E ドキュメント生成の冪等化とサブモジュール保護（doc_artifacts.py）

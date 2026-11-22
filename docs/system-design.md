@@ -69,6 +69,6 @@ flowchart LR
 ## 7. ブランチ・リリース運用
 
 - 全リポジトリ: `main` は保護。作業ブランチは `feature/<change-id>`（openspec の change ID で全リポジトリ共通）
-- `system-integration`: `opsx:propose` 時に最初に feature ブランチを作成。`opsx:archive` で各サブシステムの単体試験状況を確認し、**結合試験・総合試験が完了するまで main にマージしない**。完了後に PR 作成、マージ時は各サブシステム側の submodule 参照コミット更新
-- サブシステム: `system-integration` の feature ブランチに合わせて `feature/<change-id>` を作成し、submodule（`reference/system-integration/`）の参照先ブランチも同名へ切り替える。実装〜単体試験完了で自分の `main` へ PR。PR マージ時にファイル一覧の更新・submodule 参照ブランチを `main` に戻す
-- `system-integration` の仕様・設計は各サブシステムでは git submodule（`reference/system-integration`）として参照（読み取り専用）
+- `system-integration` の仕様・設計は各サブシステムでは読み取り専用の git submodule（`reference/system-integration`）として参照する。各サブシステムの `.gitmodules` には `path` と `url` のみを記載し `branch` 設定は持たせず、`git -C reference/system-integration fetch origin feature/<change-id> && git -C reference/system-integration checkout <commit-sha>` で確定コミット SHA（gitlink）のみを指定して管理する。
+- テスト・アーカイブ・PR マージ: 各サブシステムは `feature/<change-id>` 上で単体試験および `openspec archive <change-id> -y` を完了させた上で、`system-integration` の結合試験・総合試験（E2E 自動画面キャプチャを含む）および `openspec archive <change-id> -y` を実施する。**結合・総合試験および全 PR レビューが完了するまで、サブシステムを含めいかなるリポジトリも `main` にマージしない**。
+- マージ順序と親ハブ PR: `system-integration` の PR 本文先頭には関連サブシステム PR 一覧テーブル（ステータスリンク＋`/files` 直リンク）と GitHub 横断検索 URL（当該ブランチ一覧および Organization 全体の Open PR 一覧）を記載する。マージ時は**先に `system-integration` の PR を必ず「Create a merge commit」（Squash 禁止）で `main` にマージ**し、続けて各サブシステムの PR をそのまま `main` にマージする（submodule は最初からコミット SHA 指定のため、マージ後の参照ブランチ戻し作業は不要）。
