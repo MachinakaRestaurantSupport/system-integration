@@ -16,7 +16,7 @@
 - [x] 3.2 [S05-01-01, S05-01-02] `menu-management` で同様に `.gitmodules` の `branch` 行削除・ルール統一・`init` アーカイブ・submodule 更新・単体試験パスを確認する
 - [x] 3.3 [S05-01-01, S05-01-02] `guest-management` で同様に `.gitmodules` の `branch` 行削除・ルール統一・`init` アーカイブ・submodule 更新・単体試験パスを確認する
 - [x] 3.4 [S05-01-01, S05-01-02] `dine-in-ordering` で同様に `.gitmodules` の `branch` 行削除・ルール統一・`init` アーカイブ・submodule 更新・単体試験パスを確認する
-- [ ] 3.5 [S05-01-01, S05-01-02] `takeout-ordering` で同様に `.gitmodules` の `branch` 行削除・ルール統一・`init` アーカイブ・submodule 更新・単体試験パスを確認する
+- [x] 3.5 [S05-01-01, S05-01-02] `takeout-ordering` で同様に `.gitmodules` の `branch` 行削除・ルール統一・`init` アーカイブ・submodule 更新・単体試験パスを確認する
 - [ ] 3.6 [S05-01-01, S05-01-02] `order-management` で同様に `.gitmodules` の `branch` 行削除・ルール統一・`init` アーカイブ・submodule 更新・単体試験パスを確認する
 - [ ] 3.7 [S05-01-01, S05-01-02] `accounting-management` で同様に `.gitmodules` の `branch` 行削除・ルール統一・`init` アーカイブ・submodule 更新・単体試験パスを確認する
 - [ ] 3.8 [S05-01-01, S05-01-02] `sales-management` で同様に `.gitmodules` の `branch` 行削除・ルール統一・`init` アーカイブ・submodule 更新・単体試験パスを確認する
