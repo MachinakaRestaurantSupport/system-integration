@@ -4,7 +4,11 @@ from pathlib import Path
 
 from conftest import RestaurantSystem
 
-from system_integration.doc_artifacts import PROJECT_SPECS, capture_and_generate_docs
+from system_integration.doc_artifacts import (
+    PROJECT_SPECS,
+    _hash_html,
+    capture_and_generate_docs,
+)
 
 
 def test_e2e_dine_in_full_lifecycle(restaurant_system: RestaurantSystem) -> None:
@@ -411,3 +415,10 @@ def test_e2e_zzz_capture_portal_and_subsystem_screens(
         assert "<mxfile" in paths[3].read_text(encoding="utf-8")
         svg_text = paths[4].read_text(encoding="utf-8")
         assert "<svg" in svg_text and "data:image/png;base64," in svg_text
+
+
+def test_doc_artifacts_hash_normalizes_dates() -> None:
+    """実行日の異なる日付や年月が同一ハッシュに正規化されることを検証."""
+    html_day1 = "<h1>対象日 (2026-11-18)</h1><p>月次売上レポート（2026-11）</p>"
+    html_day2 = "<h1>対象日 (2026-12-03)</h1><p>月次売上レポート（2026-12）</p>"
+    assert _hash_html(html_day1) == _hash_html(html_day2)

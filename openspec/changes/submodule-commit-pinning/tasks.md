@@ -8,7 +8,7 @@
 ## 2. E2E ドキュメント生成の冪等化とサブモジュール保護（doc_artifacts.py）
 
 - [x] 2.1 [S05-02-01] `src/system_integration/doc_artifacts.py` の `_sync_to_subsystem_submodules()` を廃止し、`_normalize_html_for_hash()` に単独日付（`YYYY-MM-DD`）の正規化を追加する
-- [ ] 2.2 [S05-02-01] 日付非依存のハッシュ正規化と読み取り専用サブモジュール非変更を検証するテストを追加し、必要に応じ更新された `.capture-hashes.json` 等を含め `pytest -q` と `ruff check .` がパスすることを確認する
+- [x] 2.2 [S05-02-01] 日付非依存のハッシュ正規化と読み取り専用サブモジュール非変更を検証するテストを追加し、必要に応じ更新された `.capture-hashes.json` 等を含め `pytest -q` と `ruff check .` がパスすることを確認する
 
 ## 3. 全8サブシステムへの展開（各サブシステム側 OpenSpec サイクル実施）
 
