@@ -19,5 +19,5 @@
 | 種別 | 内容 | 仕様番号 |
 | --- | --- | --- |
 | 仕様 | `POST /sessions` で席ID・QRトークンから店内注文セッションを開始・検証できる | 【DineInOrdering_R01.DM01-01】 |
-| 仕様 | `POST /dine-in/orders` で店内飲食または店内発持ち帰り注文を受け付け、注文管理（I-1）へ連携できる | 【DineInOrdering_R01.DM01-02】 |
+| 仕様 | `POST /dine-in/orders` で店内飲食または店内発持ち帰り注文を受け付け、商品管理（`GET /products/{product_id}`）から正本価格・商品名・持ち帰り可否を検証・確定した上で注文管理（I-1）へ連携できる | 【DineInOrdering_R01.DM01-02】 |
 | 仕様 | `GET /dine-in/orders/{order_id}` で注文履歴・状況を参照できる | 【DineInOrdering_R01.DM01-03】 |

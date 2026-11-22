@@ -19,5 +19,5 @@ SNSプロバイダログイン、受取予約時刻付き注文受付、状況�
 | 種別 | 内容 | 仕様番号 |
 | --- | --- | --- |
 | 仕様 | `POST /auth/login` で `google` / `facebook` / `line` プロバイダの認証セッションを発行できる | 【TakeoutOrdering_R01.DM01-01】 |
-| 仕様 | `POST /takeout/orders` で受取予約時刻付き注文を受け付け、注文管理（I-2）へ連携できる | 【TakeoutOrdering_R01.DM01-02】 |
+| 仕様 | `POST /takeout/orders` で受取予約時刻付き注文を受け付け、商品管理（`GET /products/{product_id}`）から正本価格・商品名・持ち帰り可否を検証・確定した上で注文管理（I-2）へ連携できる | 【TakeoutOrdering_R01.DM01-02】 |
 | 仕様 | `GET /takeout/orders/{order_id}` および `POST /takeout/orders/{order_id}/notify-ready` で状況確認と受取可能通知を処理できる | 【TakeoutOrdering_R01.DM01-03】 |

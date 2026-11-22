@@ -284,6 +284,7 @@ def _normalize_html_for_hash(html: str) -> str:
     """Strip volatile random IDs/timestamps so unchanged UI renders keep identical hashes."""
     normalized = re.sub(r"ord_[0-9a-f]{8,12}", "ord_STATIC", html)
     normalized = re.sub(r"pay_[0-9a-f]{8,12}", "pay_STATIC", normalized)
+    normalized = re.sub(r"prod-[0-9a-f]{8}", "prod-STATIC", normalized)
     normalized = re.sub(r"cust-(?:google|facebook|line)-[0-9a-f]{8}", "cust-STATIC", normalized)
     normalized = re.sub(r"tok-[0-9a-f]{16}", "tok-STATIC", normalized)
     normalized = re.sub(r"RCP-\d{8}-[0-9A-F]{6}", "RCP-STATIC", normalized)
@@ -608,10 +609,15 @@ def capture_and_generate_docs(
         changed = force_mode
         for scr in spec.screens:
             client = getattr(system, scr.client_attr)
-            resp = client.get(scr.path)
+            target_path = scr.path
+            if scr.path == "/ui/products/1":
+                prod_list = client.get("/products")
+                if prod_list.status_code == 200 and prod_list.json():
+                    target_path = f"/ui/products/{prod_list.json()[0]['id']}"
+            resp = client.get(target_path)
             if resp.status_code != 200:
                 raise AssertionError(
-                    f"UI screen {scr.client_attr}:{scr.path} returned {resp.status_code}"
+                    f"UI screen {scr.client_attr}:{target_path} returned {resp.status_code}"
                 )
             html_text = resp.text
             digest = _hash_html(html_text)
