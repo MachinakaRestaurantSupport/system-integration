@@ -8,7 +8,6 @@ import io
 import json
 import os
 import re
-import shutil
 import subprocess
 import sys
 import tempfile
@@ -301,6 +300,8 @@ def _normalize_html_for_hash(html: str) -> str:
         "TIMESTAMP-STATIC",
         normalized,
     )
+    normalized = re.sub(r"\b\d{4}-\d{2}-\d{2}\b", "DATE-STATIC", normalized)
+    normalized = re.sub(r"\b\d{4}-\d{2}\b", "MONTH-STATIC", normalized)
     normalized = re.sub(
         r"<code>[A-Za-z0-9_-]{10,}\.\.\.</code>", "<code>TOKEN...</code>", normalized
     )
@@ -662,23 +663,4 @@ def capture_and_generate_docs(
         json.dumps(new_hashes, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )
-    _sync_to_subsystem_submodules(docs_images_dir, generated)
     return generated
-
-
-def _sync_to_subsystem_submodules(
-    docs_images_dir: Path,
-    generated: dict[str, list[Path]],
-) -> None:
-    """Sync generated docs/images into sibling subsystem submodule trees for local preview."""
-    workspace_root = docs_images_dir.resolve().parents[2]
-    for sibling in workspace_root.iterdir():
-        ref_docs = sibling / "reference" / "system-integration" / "docs"
-        if not ref_docs.exists():
-            continue
-        target_root = ref_docs / "images"
-        for key, paths in generated.items():
-            dest_dir = target_root / key
-            dest_dir.mkdir(parents=True, exist_ok=True)
-            for src in paths:
-                shutil.copy2(src, dest_dir / src.name)

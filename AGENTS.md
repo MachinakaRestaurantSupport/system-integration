@@ -54,9 +54,9 @@ Executed-Command: <機械的変更時の実行コマンド全文、手動変更�
 
 1. **opsx:propose**: 最初にブランチ `feature/<change-id>` を作成してからアーティファクト着手
 2. **opsx:apply**: `tasks.md` の各サブタスク（USDM・全体設計の更新、委譲指示、PR確認、結合・総合試験等）を「1サブタスク ＝ 1コミット」で順次実施・コミット
-3. **opsx:archive**: 各サブシステムの単体試験状況を確認 → 結合試験・総合試験実施 → `usdm.md` のUSDM仕様ラベル更新（`□□□` → `■□□` → `■■□` → `■■■`）とコミット → `openspec validate <change-name> --strict` 確認 → アーカイブ → 完了で GitHub プルリクエスト作成を提案（push / PR 作成はユーザーの明示的指示後に実行）。結合・総合試験完了まで main にマージしない。マージ時はファイル一覧の更新（各サブシステム側の submodule 参照コミット更新）
+3. **opsx:archive**: 各サブシステムの単体試験および `openspec archive <change-id> -y` 完了を確認 → 結合試験・総合試験実施 → `usdm.md` のUSDM仕様ラベル更新（`□□□` → `■■■`）とコミット → `openspec validate <change-name> --strict` 確認 → アーカイブ → 必要に応じサブシステムの `reference/system-integration` 参照 SHA を確定コミットへ同期し、親ハブ PR（関連サブシステム PR 一覧＋`/files` 直リンク＋GitHub 横断 PR 検索 URL を先頭記載）および各サブシステム PR の作成を提案（push / PR 作成はユーザーの明示的指示後に実行）。結合・総合試験完了まで `main` にマージしない。マージ時は先に `system-integration` PR を必ず「Create a merge commit」（Squash 禁止）で `main` にマージし、続けて各サブシステム PR をそのまま `main` にマージする（マージ後の submodule 参照戻し作業は不要）。
 
 ## ルール
 
 - `usdm/` 配下の USDM Markdown 編集後は `../.venv/bin/md2usdm usdm/<プロジェクト>` で Excel 再生成（`.xlsx` はコミット対象ではない）
-- push / PR 作成はユーザーの明示的な指示後に実行する（サブタスク単位のローカルコミットは上記「1サブタスク ＝ 1コミット」規約に従う）
+- push / PR 作成はユーザーの明示的な指示後に実行し、PR 作成時・レビュー節目は必ず `https://github.com/pulls?q=is%3Apr+org%3AMachinakaRestaurantSupport+head%3Afeature%2F<change-id>` と `https://github.com/pulls?q=is%3Apr+is%3Aopen+org%3AMachinakaRestaurantSupport` で PR 残件を確認する（サブタスク単位のローカルコミットは上記「1サブタスク ＝ 1コミット」規約に従う）
